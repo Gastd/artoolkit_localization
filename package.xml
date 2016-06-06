@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<package>
+    <name>artoolkit_localization</name>
+    <version>1.0.0</version>
+    <description>
+        Robot localization system based on the Unscented Kalman Filter, using ARToolkit markers as landmarks.
+    </description>
+
+    <maintainer email="gabriel.araujo.5000@gmail.com">Gabriel Araujo</maintainer>
+    <license>BSD</license>
+
+    <author email="georgebrindeiro@lara.unb.br">George Andrew Brindeiro</author>
+    <author email="m.mendelson.unb@gmail.com">Mateus Mendelson</author>
+    <author email="gabriel.araujo.5000@gmail.com">Gabriel Araujo</author>
+
+    <buildtool_depend>catkin</buildtool_depend>
+    <build_depend>geometry_msgs</build_depend>
+    <build_depend>roscpp</build_depend>
+    <build_depend>sensor_msgs</build_depend>
+    <build_depend>nav_msgs</build_depend>
+    <build_depend>ar_pose</build_depend>
+    <build_depend>eigen</build_depend>
+    <build_depend>tf</build_depend>
+    <build_depend>roslib</build_depend>
+
+    <run_depend>geometry_msgs</run_depend>
+    <run_depend>roscpp</run_depend>
+    <run_depend>sensor_msgs</run_depend>
+    <run_depend>ar_pose</run_depend>
+    <run_depend>eigen</run_depend>
+    <run_depend>tf</run_depend>
+    <run_depend>nav_msgs</run_depend>
+    <run_depend>roslib</run_depend>
+
+    <export>
+
+    </export>
+</package>
