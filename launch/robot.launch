@@ -1,5 +1,31 @@
 <launch>
-	<node ns="/teleop_base" pkg="p2os_driver" type="p2os" name="p2os_driver"/>
-	<node pkg="camera1394" type="camera1394_node" name="camera1394_node" args="_video_mode:=640x480_rgb8"/>
-	<node ns="/camera" pkg="image_proc" type="image_proc" name="image_proc"/>
+    <node ns="aramis" name="p2os_driver" pkg="p2os_driver" type="p2os_driver">
+        <param name="port" value="/dev/ttyUSB0" />
+        <param name="use_sonar" value="false" />
+        <param name="pulse" value="1.0" />
+    </node>
+
+    <arg name="camera_serial" default="0" />
+    <arg name="calibrated" default="0" />
+
+    <group ns="camera">
+        <node pkg="nodelet" type="nodelet" name="camera_nodelet_manager" args="manager" />
+        <node pkg="nodelet" type="nodelet" name="camera_nodelet" args="load pointgrey_camera_driver/PointGreyCameraNodelet camera_nodelet_manager" >
+          <param name="frame_id" value="usb_camera_frame" />
+          <param name="serial" value="$(arg camera_serial)" />
+
+          <!-- When unspecified, the driver will use the default framerate as given by the
+               camera itself. Use this parameter to override that value for cameras capable of
+               other framerates. -->
+          <!-- <param name="frame_rate" value="15" /> -->
+
+          <!-- Use the camera_calibration package to create this file -->
+          <param name="camera_info_url" if="$(arg calibrated)" value="file://$(env HOME)/.ros/camera_info/$(arg camera_serial).yaml" />
+        </node>
+         <node pkg="nodelet" type="nodelet" name="image_proc_debayer" args="load image_proc/debayer camera_nodelet_manager">
+        </node>
+        <node pkg="nodelet" type="nodelet" name="image_proc_rectify" args="load image_proc/rectify camera_nodelet_manager">
+        </node>
+    </group>
+  <node name="enable_motors" pkg="rostopic" type="rostopic" args="pub -1 /cmd_motor_state p2os_msgs/MotorState 'state: 1' " />
 </launch>

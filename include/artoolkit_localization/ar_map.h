@@ -44,14 +44,14 @@ using namespace std;
 class ARMap
 {
     public:
-    	#ifdef MAPPING
-    	ARMap(std::string map_path = "cfg/outputMap.map")
+        #ifdef MAPPING
+        ARMap(std::string map_path = "cfg/outputMap.map")
         {
             map_path_ = map_path;
 
             Init();
         }
-    	#else
+        #else
         ARMap(std::string map_path = "cfg/lara.map")
         {
             map_path_ = map_path;
@@ -64,43 +64,43 @@ class ARMap
 
         void Init();
 
-		// Reading Functions
+        // Reading Functions
 
-		bool read(string filename);
+        bool read(string filename);
 
-		bool parseLine(string line);
+        bool parseLine(string line);
 
-		// Map functions
+        // Map functions
 
-		bool empty();
+        bool empty();
 
-		int getSize();
+        int getSize();
 
-		// Vector functions
+        // Vector functions
 
-		vector<double>& get(string key);
+        vector<double>& get(string key);
 
-		vector<double>& get(int key);
+        vector<double>& get(int key);
 
-		string& name(string key);
+        string& name(string key);
 
-		string& name(int key);
+        string& name(int key);
 
-		// Misc
+        // Misc
 
-		void print();
+        void print();
 
-		map< string, vector <double> >::iterator& begin();
+        map< string, vector <double> >::iterator& begin();
 
-	 	map< string, vector <double> >::iterator& end();
+        map< string, vector <double> >::iterator& end();
 
     private:
-        std::string map_path_;		// File with list of ARMarkers
+        std::string map_path_;      // File with list of ARMarkers
 
-		map< string, vector <double> > ar_map;
-		map< string, string > ar_name;
-		map< string, vector <double> >::iterator begin_iterator;
-		map< string, vector <double> >::iterator end_iterator;
+        map< string, vector <double> > ar_map;
+        map< string, string > ar_name;
+        map< string, vector <double> >::iterator begin_iterator;
+        map< string, vector <double> >::iterator end_iterator;
 
         DISALLOW_COPY_AND_ASSIGN(ARMap);
 };
