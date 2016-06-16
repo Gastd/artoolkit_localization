@@ -634,14 +634,6 @@ int main(int argc, char **argv)
         transform.setRotation(rotation);
         br.sendTransform(tf::StampedTransform(transform, ts, "localization_odom", "pose_no_cov"));
 
-        // Publish world/camera tf transform based on robot position
-        // Height: 0.85 Rotation: -90º in z
-        // Robot x axis is front, y axis is left
-        // Camera x axis is right, y axis is front (both in robot's perspective)
-        transform.setOrigin( tf::Vector3(0, 0, 0.85) );
-        transform.setRotation( tf::createQuaternionFromRPY(0, 0, -1.57) );
-        br.sendTransform(tf::StampedTransform(transform, ts, "base_link", "camera"));
-
         ros::spinOnce();
         loop_rate.sleep();
     }
