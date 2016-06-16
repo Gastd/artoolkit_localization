@@ -23,6 +23,7 @@
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
 #include <tf/transform_broadcaster.h>
+#include <tf/transform_listener.h>
 #include <ros/package.h>
 #include <visualization_msgs/Marker.h>
 
@@ -545,10 +546,6 @@ int main(int argc, char **argv)
         ros::Publisher pub_pose_no_cov = loc_nh.advertise<geometry_msgs::PoseStamped>("artoolkit_localization/pose_no_cov", 1);
     #endif
 
-    // Broadcaster for camera/robot transform
-    tf::Transform transform;
-    tf::TransformBroadcaster br;
-
     // Node loop rate
     ros::Rate loop_rate(100);
 
@@ -566,6 +563,25 @@ int main(int argc, char **argv)
 
     /* MAP MARKERS */
     ros::Publisher marker_pub = loc_nh.advertise<visualization_msgs::Marker>("visualization_marker", 1);
+
+    // Broadcaster for camera/robot transform
+    tf::Transform map_bl_tf;
+    tf::TransformBroadcaster br;
+    tf::TransformListener listener;
+    tf::StampedTransform odom_bl_tf;
+
+    loop_rate.sleep();
+    ros::spinOnce();
+
+    try
+    {
+        listener.lookupTransform("odom", "base_link", ros::Time(0), odom_bl_tf);
+    }
+    catch (tf::TransformException ex)
+    {
+        ROS_ERROR("%s",ex.what());
+        ros::Duration(1.0).sleep();
+    }
 
     while(ros::ok())
     {
@@ -597,7 +613,6 @@ int main(int argc, char **argv)
             ROS_INFO("z = %lf", localizer->poseMsg().pose.pose.position.z);
             ROS_INFO("g_theta = %lf\n\n", g_theta);*/
 
-
             // cout << "\nx = " << localizer->poseMsg().pose.pose.position.x << endl;
             // cout << "y = " << localizer->poseMsg().pose.pose.position.y << endl;
             // cout << "z = " << localizer->poseMsg().pose.pose.position.z << endl;
@@ -613,7 +628,6 @@ int main(int argc, char **argv)
             */
         #endif
 
-
         setupRealMap(marker_pub);
         //Publishing path
         //i++;
@@ -625,14 +639,19 @@ int main(int argc, char **argv)
         tf::Quaternion rotation;
         #if POSE_WITH_COVARIANCE_STAMPED
             tf::quaternionMsgToTF(localizer->poseMsg().pose.pose.orientation, rotation);
-            transform.setOrigin( tf::Vector3(localizer->poseMsg().pose.pose.position.x, localizer->poseMsg().pose.pose.position.y, 0) );
+            map_bl_tf.setOrigin( tf::Vector3(localizer->poseMsg().pose.pose.position.x, localizer->poseMsg().pose.pose.position.y, 0) );
         #elif POSE_STAMPED
             tf::quaternionMsgToTF(localizer->poseMsg().pose.orientation, rotation);
-            transform.setOrigin( tf::Vector3(localizer->poseMsg().pose.position.x, localizer->poseMsg().pose.position.y, 0) );
+            map_bl_tf.setOrigin( tf::Vector3(localizer->poseMsg().pose.position.x, localizer->poseMsg().pose.position.y, 0) );
         #endif
 
-        transform.setRotation(rotation);
-        br.sendTransform(tf::StampedTransform(transform, ts, "localization_odom", "pose_no_cov"));
+        map_bl_tf.setRotation(rotation);
+        // The localization node should send map_frame to odom_frame transform,
+        // the odom_frame to base_frame is send by p2os_driver, this node estimate
+        // the transform between map_frame and base_frame
+        tf::StampedTransform map_bl_stamp_tf = tf::StampedTransform(map_bl_tf, ts, "map", "base_link");
+        tf::Transform map_odom_tf = odom_bl_tf.inverse() * map_bl_stamp_tf;
+        br.sendTransform(tf::StampedTransform(map_odom_tf, ts, "map", "odom"));
 
         ros::spinOnce();
         loop_rate.sleep();
