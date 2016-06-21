@@ -1,5 +1,5 @@
 <launch>
-	<!-- <node ns="teleop_base" pkg="joy" type="joy_node" name="joy_node"/> -->
+    <!-- <node ns="teleop_base" pkg="joy" type="joy_node" name="joy_node"/> -->
     <!-- <node pkg="p2os_teleop" type="p2os_teleop" name="p2os_teleop"/> -->
     <!-- <node pkg="rostopic" type="rostopic" name="rostopic" args="pub /teleop_base/cmd_motor_state p2os_driver/MotorState 1" output="screen"/> -->
     <!-- <node pkg="rviz" type="rviz" name="rviz"/> -->
@@ -32,7 +32,7 @@
     output="screen">
         <param name="marker_pattern_list" type="string" value="$(find ar_pose)/data/object_4x4"/>
         <param name="threshold" type="int" value="100"/>
-      <remap from="/camera/image_raw" to="/camera/image_color" />
+        <remap from="/camera/image_raw" to="/camera/image_rect" />
     </node>
     <include file="$(find aramis_description)/launch/aramis_description.launch" />
     <node pkg="artoolkit_localization" type="artoolkit_localization" name="artookit_localization" output="screen" />
