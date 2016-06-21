@@ -24,6 +24,8 @@
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
 #include <tf/transform_broadcaster.h>
 #include <tf/transform_listener.h>
+#include <tf/transform_datatypes.h>
+#include <geometry_msgs/TransformStamped.h>
 #include <ros/package.h>
 #include <visualization_msgs/Marker.h>
 
@@ -480,8 +482,8 @@ void publishMapMarkers(UKF* localizer, ros::Publisher& marker_pub)
 void pubPath(UKF* localizer, ros::Publisher& marker_pub, int i)
 {
     visualization_msgs::Marker marker;
-    marker.header.frame_id = "/odom";
-    marker.header.stamp = ros::Time::now ();
+    marker.header.frame_id = "/map";
+    marker.header.stamp = ros::Time::now();
     marker.ns = "estimated_path";
 
     marker.id = i;
@@ -547,7 +549,7 @@ int main(int argc, char **argv)
     #endif
 
     // Node loop rate
-    ros::Rate loop_rate(100);
+    ros::Rate loop_rate(50);
 
     /* UKF */
     ROS_DEBUG("Path to ARMap is not absolute... Possible SEGFAULT!");
@@ -570,12 +572,12 @@ int main(int argc, char **argv)
     tf::TransformListener listener;
     tf::StampedTransform odom_bl_tf;
 
-    loop_rate.sleep();
+    ros::Duration(7.0).sleep();
     ros::spinOnce();
 
     try
     {
-        listener.lookupTransform("odom", "base_link", ros::Time(0), odom_bl_tf);
+        listener.lookupTransform("odom", "base_link", ros::Time::now(), odom_bl_tf);
     }
     catch (tf::TransformException ex)
     {
@@ -651,6 +653,7 @@ int main(int argc, char **argv)
         // the transform between map_frame and base_frame
         tf::StampedTransform map_bl_stamp_tf = tf::StampedTransform(map_bl_tf, ts, "map", "base_link");
         tf::Transform map_odom_tf = odom_bl_tf.inverse() * map_bl_stamp_tf;
+        map_odom_tf.setRotation(tf::Quaternion(0,0,0,1));
         br.sendTransform(tf::StampedTransform(map_odom_tf, ts, "map", "odom"));
 
         ros::spinOnce();
