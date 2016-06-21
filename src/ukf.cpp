@@ -72,7 +72,7 @@ void UKF::localize(std::vector<double> controls, std::map< int, vector<double> >
 		update(measurements);
 		//ROS_INFO("(4) update");
 	}
-       
+
     //cout << cov_state << endl;
 
 	//ROS_INFO("(5) done!");
@@ -290,7 +290,7 @@ geometry_msgs::PoseWithCovarianceStamped UKF::poseMsg()
 	geometry_msgs::PoseWithCovarianceStamped pose_msg;
 
 	pose_msg.header.stamp = ros::Time::now();
-	pose_msg.header.frame_id = "pose_no_cov";
+	pose_msg.header.frame_id = "base_link";
 
 	pose_msg.pose.pose.position.x = state_(0);
 	pose_msg.pose.pose.position.y = state_(1);
