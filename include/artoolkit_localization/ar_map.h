@@ -31,7 +31,7 @@
 #include <cstdlib>
 
 // Choose whether to map or not
-#define MAPPING true
+// #define MAPPING true
 
 using namespace std;
 
