@@ -10,7 +10,7 @@
     <group ns="camera">
         <node pkg="nodelet" type="nodelet" name="camera_nodelet_manager" args="manager" />
         <node pkg="nodelet" type="nodelet" name="camera_nodelet" args="load pointgrey_camera_driver/PointGreyCameraNodelet camera_nodelet_manager" >
-          <param name="frame_id" value="usb_camera_frame" />
+          <param name="frame_id" value="usb_camera_optical_frame" />
           <param name="serial" value="$(arg camera_serial)" />
 
           <!-- When unspecified, the driver will use the default framerate as given by the
@@ -30,7 +30,7 @@
     <!-- <node pkg="tf" type="static_transform_publisher" name="pose_bl" args="0 0 0 0 0 0 1 pose_no_cov base_link 10" /> -->
     <node name="ar_pose" pkg="ar_pose" type="ar_multi" respawn="false"
     output="screen">
-        <param name="marker_pattern_list" type="string" value="$(find ar_pose)/data/object_4x4"/>
+        <param name="marker_pattern_list" type="string" value="$(find ar_pose)/data/lara"/>
         <param name="threshold" type="int" value="100"/>
         <remap from="/camera/image_raw" to="/camera/image_rect" />
     </node>
