@@ -575,14 +575,20 @@ int main(int argc, char **argv)
     ros::Duration(7.0).sleep();
     ros::spinOnce();
 
-    try
+    bool flag = false;
+    while(!flag)
     {
-        listener.lookupTransform("odom", "base_link", ros::Time::now(), odom_bl_tf);
-    }
-    catch (tf::TransformException ex)
-    {
-        ROS_ERROR("%s",ex.what());
-        ros::Duration(1.0).sleep();
+        try
+        {
+            listener.lookupTransform("odom", "base_link", ros::Time::now(), odom_bl_tf);
+            flag = true;
+        }
+        catch (tf::TransformException ex)
+        {
+            ROS_ERROR("%s",ex.what());
+            ros::Duration(1.0).sleep();
+            flag = false;
+        }
     }
 
     while(ros::ok())
