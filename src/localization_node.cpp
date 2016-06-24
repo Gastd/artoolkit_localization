@@ -48,7 +48,7 @@ void setupRealMap(ros::Publisher& marker_pub)
     //Altura do chão até o teto = 273 cm
 
     visualization_msgs::Marker marker;
-    marker.header.frame_id = "/odom";
+    marker.header.frame_id = "/map";
     marker.header.stamp = ros::Time::now ();
     marker.ns = "markers";
 
@@ -403,7 +403,7 @@ void setupRealMap(ros::Publisher& marker_pub)
 void publishMapMarkers(UKF* localizer, ros::Publisher& marker_pub)
 {
     visualization_msgs::Marker marker;
-    marker.header.frame_id = "/odom";
+    marker.header.frame_id = "/map";
     marker.header.stamp = ros::Time::now ();
     marker.ns = "markers";
     marker.id = 31;
