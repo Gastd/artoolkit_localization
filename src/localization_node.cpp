@@ -576,7 +576,8 @@ int main(int argc, char **argv)
     ros::spinOnce();
 
     bool flag = false;
-    while(!flag)
+
+    while(ros::ok())
     {
         try
         {
@@ -589,10 +590,6 @@ int main(int argc, char **argv)
             ros::Duration(1.0).sleep();
             flag = false;
         }
-    }
-
-    while(ros::ok())
-    {
         ros::Time ts = ros::Time::now();
 
         /* Node main loop */
