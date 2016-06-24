@@ -580,7 +580,7 @@ int main(int argc, char **argv)
     {
         try
         {
-            listener.lookupTransform("odom", "base_link", ros::Time::now(), odom_bl_tf);
+            listener.lookupTransform("odom", "base_link", ros::Time(0), odom_bl_tf);
             flag = true;
         }
         catch (tf::TransformException ex)
