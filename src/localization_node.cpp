@@ -572,24 +572,19 @@ int main(int argc, char **argv)
     tf::TransformListener listener;
     tf::StampedTransform odom_bl_tf;
 
-    ros::Duration(7.0).sleep();
     ros::spinOnce();
-
-    bool flag = false;
 
     while(ros::ok())
     {
         try
         {
             listener.lookupTransform("odom", "base_link", ros::Time(0), odom_bl_tf);
-            flag = true;
         }
         catch (tf::TransformException ex)
         {
             ROS_ERROR("%s",ex.what());
-            ros::Duration(1.0).sleep();
-            flag = false;
         }
+
         ros::Time ts = ros::Time::now();
 
         /* Node main loop */
