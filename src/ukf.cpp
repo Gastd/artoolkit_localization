@@ -290,7 +290,7 @@ geometry_msgs::PoseWithCovarianceStamped UKF::poseMsg()
 	geometry_msgs::PoseWithCovarianceStamped pose_msg;
 
 	pose_msg.header.stamp = ros::Time::now();
-	pose_msg.header.frame_id = "base_link";
+	pose_msg.header.frame_id = "map";
 
 	pose_msg.pose.pose.position.x = state_(0);
 	pose_msg.pose.pose.position.y = state_(1);
