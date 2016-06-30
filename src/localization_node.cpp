@@ -650,7 +650,7 @@ int main(int argc, char **argv)
         // the odom_frame to base_frame is send by p2os_driver, this node estimate
         // the transform between map_frame and base_frame
         tf::StampedTransform map_bl_stamp_tf = tf::StampedTransform(map_bl_tf, ts, "map", "base_link");
-        tf::Transform map_odom_tf = odom_bl_tf.inverse() * map_bl_stamp_tf;
+        tf::Transform map_odom_tf = map_bl_stamp_tf * odom_bl_tf.inverse();
         map_odom_tf.setRotation(tf::Quaternion(0,0,0,1));
         br.sendTransform(tf::StampedTransform(map_odom_tf, ts, "map", "odom"));
 
