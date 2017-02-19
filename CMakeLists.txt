@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   sensor_msgs
   roslib
+  ar_pose
   tf
 )
 set(ROS_BUILD_TYPE RelWithDebInfo)
